@@ -8,12 +8,14 @@ import { useTitle } from '../../hooks/useTitle';
 import { ProfessionalCard } from './ProfessionalCard/ProfessionalCard';
 import { useUser } from '../../hooks/useUser';
 import { useNavigate } from 'react-router-dom';
+import { LoadingCard } from './LoadingCard/LoadingCard';
 
 const BuscarProfissionais = () => {
   useTitle('Busca');
   const user: any = useUser();
   const navigate = useNavigate();
   const [favorites, setFavorites] = useState<number[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const { showNotification } = useContext(NotificationContext);
   const query = useQuery();
@@ -22,6 +24,7 @@ const BuscarProfissionais = () => {
   const queryValue = query.get('query') || ' ';
   const [profissionais, setProfissionais] = useState<IProfissional[]>([]);
   useEffect(() => {
+    setLoading(true);
     api
       .get('/professionals/search', {
         params: {
@@ -31,6 +34,7 @@ const BuscarProfissionais = () => {
       })
       .then((res) => {
         setProfissionais(res.data);
+        setLoading(false);
       })
       .catch((err) => {
         showNotification(err, 'error');
@@ -92,21 +96,32 @@ const BuscarProfissionais = () => {
   return (
     <Grid container spacing={2} sx={{ p: 10, color: 'black' }}>
       <Typography variant="h6">
-        {profissionais !== undefined &&
+        {loading && 'Carregando...'}
+        {!loading &&
+          profissionais !== undefined &&
           `${profissionais?.length}  ${
             profissionais?.length === 1 ? ' profissional encontrado' : 'profissionais encontrados'
           } `}
       </Typography>
-      {profissionais.map((profissional, index) => {
-        return (
-          <ProfessionalCard
-            key={`profissional-${index}`}
-            profissional={profissional}
-            favorite={favorites.includes(profissional.id)}
-            actions={{ addFavorite, removeFavorite }}
-          ></ProfessionalCard>
-        );
-      })}
+      {loading && (
+        <>
+          <LoadingCard />
+          <LoadingCard />
+          <LoadingCard />
+          <LoadingCard />
+        </>
+      )}
+      {!loading &&
+        profissionais.map((profissional, index) => {
+          return (
+            <ProfessionalCard
+              key={`profissional-${index}`}
+              profissional={profissional}
+              favorite={favorites.includes(profissional.id)}
+              actions={{ addFavorite, removeFavorite }}
+            ></ProfessionalCard>
+          );
+        })}
     </Grid>
   );
 };
