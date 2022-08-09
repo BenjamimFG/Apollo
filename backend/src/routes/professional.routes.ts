@@ -52,6 +52,7 @@ professionalRouter.get(
   authGuard('CUSTOMER'),
   ProfessionalController.getFavorites
 );
+professionalRouter.get('/cities', ProfessionalController.getCities);
 professionalRouter.get(
   '/:professionalId',
   validateReq(professionalIdSchema, 'params'),

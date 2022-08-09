@@ -26,6 +26,7 @@ import workplaceRepository from '../repositories/workplace.repository';
 import WorkHourType from '../types/workHour.type';
 import favoriteRepository from '../repositories/favorite.repository';
 import reviewRepository from '../repositories/review.repository';
+import { CITIES } from '../helpers/consts.helper';
 
 export default class ProfessionalController {
   public static async register(req: Request, res: Response) {
@@ -343,5 +344,9 @@ export default class ProfessionalController {
 
       return internalError(res, 'Erro interno ao buscar profissional');
     }
+  }
+
+  public static async getCities(_: Request, res: Response) {
+    return res.status(200).json(CITIES);
   }
 }
