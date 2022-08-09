@@ -32,6 +32,18 @@ const Input = styled.input`
   }
 `;
 
+export const Select = styled.select`
+  color: var(--header);
+  background-color: var(--input);
+  border: none;
+  padding: 10px;
+  font-size: 1em;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  margin-top: 10px;
+`;
+
 const ErrorMessage = styled.span`
   color: red;
   font-size: 0.7em;

@@ -347,6 +347,6 @@ export default class ProfessionalController {
   }
 
   public static async getCities(_: Request, res: Response) {
-    return res.status(200).json(CITIES);
+    return res.status(200).json(CITIES.sort());
   }
 }

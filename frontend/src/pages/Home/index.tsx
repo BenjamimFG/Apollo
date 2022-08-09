@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Footer } from '../../components/Footer/Footer';
 import {
   Parallax,
@@ -14,9 +14,10 @@ import p1 from '../../images/parallax1.png';
 import p2 from '../../images/parallax2.png';
 
 import { Link, useNavigate } from 'react-router-dom';
-import { TextInputLaranja } from '../../components/TextInputLaranja/TextInputLaranja';
+import { TextInputLaranja, Div, Select } from '../../components/TextInputLaranja/TextInputLaranja';
 import { NotificationContext } from '../../components/NotificationProvider/NotificationProvider';
 import { useTitle } from '../../hooks/useTitle';
+import api from '../../services/api';
 
 interface ISearch {
   city: string;
@@ -25,6 +26,10 @@ interface ISearch {
 const Home = () => {
   useTitle('Home');
   const { showNotification } = useContext(NotificationContext);
+  const [cities, setCities] = useState([]);
+  useEffect(() => {
+    api.get('/professionals/cities').then((res) => setCities(res.data));
+  }, []);
   const navigate = useNavigate();
   const [search, setSearch] = useState<ISearch>({
     city: '',
@@ -44,13 +49,20 @@ const Home = () => {
             <UpFirstContent>Busque um estilo com os nossos profissionais</UpFirstContent>
             <DownFirstContent>
               <DownGridContainer>
-                <TextInputLaranja
-                  label=""
-                  placeholder="Cidade"
-                  name="city"
-                  value={search?.city || ''}
-                  onChange={handleChange}
-                />
+                <Div>
+                  <Select name="city" onChange={handleChange} defaultValue="">
+                    <option value="" disabled>
+                      Cidade
+                    </option>
+                    {cities.map((city) => {
+                      return (
+                        <option key={city} value={city}>
+                          {city}
+                        </option>
+                      );
+                    })}
+                  </Select>
+                </Div>
                 <TextInputLaranja
                   label=""
                   placeholder="Busque um profissional"
